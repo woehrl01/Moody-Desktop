@@ -1,0 +1,16 @@
+﻿<Window x:Class="Moody_Desktop.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Moody_Desktop"
+        mc:Ignorable="d"
+        Title="Login" Height="352" Width="525" Icon="Assets/Icon.png" SizeToContent="Width"
+        MinHeight="350" MinWidth="450">
+    <Grid Background="#FF1A507C">
+        <Image x:Name="image" Height="110" Margin="0,50,0,0" Width="110" VerticalAlignment="Top" Source="Assets/Icon.png"/>
+        <Button x:Name="button" Content="Login" Margin="10,0,10,55" VerticalAlignment="Bottom" Height="30" OpacityMask="#FF307FC1" IsEnabled="False"/>
+        <ComboBox x:Name="comboBox" Margin="10,0,10,90" VerticalAlignment="Bottom" Height="26" OpacityMask="#FF1A507C" MaxDropDownHeight="289"/>
+        <TextBox x:Name="textBox" Height="26" Margin="10,0,10,116" TextWrapping="Wrap" VerticalAlignment="Bottom" SpellCheck.IsEnabled="True" KeyDown="TextBox_OnKeyDown" MaxLines="1" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+    </Grid>
+</Window>
