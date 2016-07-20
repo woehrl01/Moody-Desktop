@@ -6,7 +6,15 @@
         xmlns:local="clr-namespace:Moody_Desktop"
         mc:Ignorable="d"
         Title="Vote" Height="352" Width="525" Icon="Assets/Icon.png" SizeToContent="Width"
-        MinWidth="300">
+        MinWidth="300" Background="Black">
+    <Window.Resources>
+        <Storyboard x:Key="SbShowBottomMenu" >
+            <ThicknessAnimation Storyboard.TargetProperty="Margin" From="0,0,0,0" To="0,0,0,100" DecelerationRatio=".9" Duration="0:0:1" />
+        </Storyboard>
+        <Storyboard x:Key="SbHideBottomMenu">
+            <ThicknessAnimation Storyboard.TargetProperty="Margin" From="0,0,0,100" To="0,0,0,0" AccelerationRatio=".9" Duration="0:0:1" />
+        </Storyboard>
+    </Window.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="2*"/>

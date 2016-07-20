@@ -13,13 +13,30 @@ namespace Moody_Desktop
 {
     public partial class MainWindow : Window
     {
-        private List<Loc> _locationList;
-        private string _address;
+        private List<Loc> LocationList { get; set; }
+        private string Address { get; set; }
 
         public MainWindow()
-        {
+        {  
             WindowStartupLocation = WindowStartupLocation.CenterScreen;
             InitializeComponent();
+
+            try
+            {
+                using (StreamReader sr = new StreamReader("cfg.json"))
+                {
+                    string line = sr.ReadToEnd();
+                    Console.WriteLine(line);
+                    Dictionary<string, string> cfg = JsonConvert.DeserializeObject<Dictionary<string, string>>(line);
+                    textBox.Text = cfg["Address"];
+                    GetLocations(cfg["Address"], cfg["Location"]);
+                }
+            }
+            catch (Exception)
+            {
+                Console.WriteLine("Couldn´t read cfg!");
+            }
+
             button.Click += delegate(object sender, RoutedEventArgs args)
             {
                 Point screenCoordinates = PointToScreen(new Point(0, 0));
@@ -29,7 +46,17 @@ namespace Moody_Desktop
                     {"Width", Width}
                 };
 
-                Vote vote = new Vote(_address, GetIdByName(comboBox.SelectedItem.ToString()),screenCoordinates);
+                var path = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
+                Dictionary<string, string> cfg = new Dictionary<string, string>
+                {
+                    {"Address", Address},
+                    {"Location", comboBox.SelectedItem.ToString()}
+                };
+
+                string cfgAsJson = JsonConvert.SerializeObject(cfg, Formatting.Indented);
+                System.IO.File.WriteAllText(path + @"\cfg.json",cfgAsJson);
+
+                Vote vote = new Vote(Address, GetIdByName(comboBox.SelectedItem.ToString()),screenCoordinates);
                 vote.Show();
                 Close();
             };
@@ -53,7 +80,7 @@ namespace Moody_Desktop
 
         private int GetIdByName(string toString)
         {
-            foreach (Loc l in _locationList)
+            foreach (Loc l in LocationList)
             {
                 if (l.Location == toString)
                 {
@@ -94,6 +121,45 @@ namespace Moody_Desktop
             }
         }
 
+        private void GetLocations(string address, string location)
+        {
+            try
+            {
+                new Thread(new ThreadStart(async () =>
+                {
+                    var data = await LoadLocationAsync(address);
+
+                    Application.Current.Dispatcher.Invoke(new Action((() =>
+                    {
+                        if (data != null)
+                        {
+                            comboBox.Items.Clear();
+                            foreach (var item in data)
+                            {
+                                comboBox.Items.Add(item);
+                            }
+                            comboBox.SelectedItem = data.ToArray()[0];
+                            comboBox.IsEnabled = true;
+
+                            button.IsEnabled = true;
+
+                            foreach (var item in data)
+                            {
+                                if (item == location)
+                                {
+                                    comboBox.SelectedItem = item;
+                                }
+                            }
+                        }
+                    })));
+                })).Start();
+            }
+            catch (Exception)
+            {
+                MessageBox.Show("Something went wrong!");
+            }
+        }
+
         private void TextBox_OnKeyDown(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Enter && textBox.Text != null)
@@ -121,14 +187,14 @@ namespace Moody_Desktop
                 reader.Close();
                 response.Close();
 
-                _locationList = JsonConvert.DeserializeObject<List<Loc>>(content);
+                LocationList = JsonConvert.DeserializeObject<List<Loc>>(content);
                 List<string> locs = new List<string>();
 
-                foreach (Loc l in _locationList)
+                foreach (Loc l in LocationList)
                 {
                     locs.Add(l.Location);
                 }
-                _address = address;
+                Address = address;
                 return locs;
             }
             catch (Exception e)
