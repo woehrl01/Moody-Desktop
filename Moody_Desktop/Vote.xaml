@@ -14,20 +14,20 @@
             <RowDefinition Height="2*"/>
             <RowDefinition Height="2*"/>
         </Grid.RowDefinitions>
-        <Button Grid.Row="0" x:Name="b2" Margin="0" AllowDrop="True" BorderThickness="0" Background="#FF99CC00" Style="{StaticResource Btn}">
+        <Button Grid.Row="0" x:Name="b1" Margin="0" AllowDrop="True" BorderThickness="0" Background="#FF99CC00" Style="{StaticResource Btn}">
             <Image x:Name="image" Width="100" Source="Assets/vg.png" Margin="0,3" HorizontalAlignment="Center" VerticalAlignment="Center">
                 <Image.OpacityMask>
                     <ImageBrush ImageSource="Assets/vg.png" Stretch="Uniform"/>
                 </Image.OpacityMask>
             </Image>
         </Button>
-        <Button Grid.Row="1" x:Name="b3" Margin="0" Background="#FF33B5E5" BorderThickness="0" Style="{StaticResource Btn}">
+        <Button Grid.Row="1" x:Name="b2" Margin="0" Background="#FF33B5E5" BorderThickness="0" Style="{StaticResource Btn}">
             <Image x:Name="image1" Width="100" Source="Assets/g.png" Margin="0,3" VerticalAlignment="Center" HorizontalAlignment="Center"/>
         </Button>
-        <Button Grid.Row="2" x:Name="b4" Margin="0" Background="#FFFF8800" BorderThickness="0" Style="{StaticResource Btn}">
+        <Button Grid.Row="2" x:Name="b3" Margin="0" Background="#FFFF8800" BorderThickness="0" Style="{StaticResource Btn}">
             <Image x:Name="image2" Width="100" Source="Assets/b.png" Margin="0,3" VerticalAlignment="Center" HorizontalAlignment="Center"/>
         </Button>
-        <Button Grid.Row="3" x:Name="b1" Margin="0" Background="#FFCC0000" BorderThickness="0" Style="{StaticResource Btn}">
+        <Button Grid.Row="3" x:Name="b4" Margin="0" Background="#FFCC0000" BorderThickness="0" Style="{StaticResource Btn}">
             <Image x:Name="image3" Width="100" Source="Assets/vb.png" Margin="0,3" VerticalAlignment="Center" HorizontalAlignment="Center"/>
         </Button>
     </Grid>

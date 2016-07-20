@@ -10,7 +10,7 @@
     <Grid Background="#FF1A507C">
         <Image x:Name="image" Height="110" Margin="0,50,0,0" Width="110" VerticalAlignment="Top" Source="Assets/Icon.png"/>
         <Button x:Name="button" Content="Login" Margin="10,0,10,55" VerticalAlignment="Bottom" Height="30" OpacityMask="#FF307FC1" IsEnabled="False"/>
-        <ComboBox x:Name="comboBox" Margin="10,0,10,90" VerticalAlignment="Bottom" Height="26" OpacityMask="#FF1A507C" MaxDropDownHeight="289"/>
-        <TextBox x:Name="textBox" Height="26" Margin="10,0,10,116" TextWrapping="Wrap" VerticalAlignment="Bottom" SpellCheck.IsEnabled="True" KeyDown="TextBox_OnKeyDown" MaxLines="1" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+        <ComboBox x:Name="comboBox" Margin="10,0,10,90" VerticalAlignment="Bottom" Height="26" OpacityMask="#FF1A507C" MaxDropDownHeight="289" VerticalContentAlignment="Center" IsEnabled="False"/>
+        <TextBox x:Name="textBox" Height="26" Margin="10,0,10,116" TextWrapping="Wrap" VerticalAlignment="Bottom" SpellCheck.IsEnabled="True" KeyDown="TextBox_OnKeyDown" MaxLines="1" HorizontalContentAlignment="Left" VerticalContentAlignment="Center" Text="Server Address" TextDecorations="{x:Null}" FontSize="14.667" />
     </Grid>
 </Window>

@@ -2,8 +2,9 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Net;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Input;
 using Moody;
 using Newtonsoft.Json;
@@ -13,32 +14,83 @@ namespace Moody_Desktop
     public partial class MainWindow : Window
     {
         private List<Loc> _locationList;
-        private List<string> _dropdownData = null; 
+        private string _address;
 
         public MainWindow()
         {
+            WindowStartupLocation = WindowStartupLocation.CenterScreen;
             InitializeComponent();
             button.Click += delegate(object sender, RoutedEventArgs args)
             {
-                Vote vote = new Vote();
+                Point screenCoordinates = PointToScreen(new Point(0, 0));
+                Dictionary<string, double> dimens = new Dictionary<string, double>
+                {
+                    {"Height", Height},
+                    {"Width", Width}
+                };
+
+                Vote vote = new Vote(_address, GetIdByName(comboBox.SelectedItem.ToString()),screenCoordinates);
                 vote.Show();
-                this.Close();
+                Close();
             };
+
+            textBox.GotFocus += (sender, args) =>
+            {
+                if (textBox.Text == "Server Address")
+                {
+                    textBox.Text = "";
+                }
+            };
+
+            textBox.LostFocus += (sender, args) =>
+            {
+                if (textBox.Text == "")
+                {
+                    textBox.Text = "Server Address";
+                }
+            };
+        }
+
+        private int GetIdByName(string toString)
+        {
+            foreach (Loc l in _locationList)
+            {
+                if (l.Location == toString)
+                {
+                    return l.Identiefier;
+                }
+            }
+            return -1;
         }
 
         private void GetLocations(string address)
         {
-            DownloadLocations(address);
-            if (_dropdownData != null)
+            try
             {
-                comboBox.Items.Clear();
-                foreach (var item in _dropdownData)
+                new Thread(new ThreadStart(async () =>
                 {
-                    comboBox.Items.Add(item);
-                }
-                comboBox.SelectedItem = _dropdownData.ToArray()[0];
+                    var data = await LoadLocationAsync(address);
 
-                button.IsEnabled = true;
+                    Application.Current.Dispatcher.Invoke(new Action((() =>
+                    {
+                        if (data != null)
+                        {
+                            comboBox.Items.Clear();
+                            foreach (var item in data)
+                            {
+                                comboBox.Items.Add(item);
+                            }
+                            comboBox.SelectedItem = data.ToArray()[0];
+                            comboBox.IsEnabled = true;
+
+                            button.IsEnabled = true;
+                        }
+                    })));         
+                })).Start();
+            }
+            catch (Exception)
+            {
+                MessageBox.Show("Something went wrong!");
             }
         }
 
@@ -50,7 +102,12 @@ namespace Moody_Desktop
             }
         }
 
-        private void DownloadLocations(string address)
+        private Task<List<string>> LoadLocationAsync(string address)
+        {
+            return Task.Run(() => DownloadLocations(address));
+        }
+
+        private List<string> DownloadLocations(string address)
         {
             try
             {
@@ -71,11 +128,14 @@ namespace Moody_Desktop
                 {
                     locs.Add(l.Location);
                 }
-                _dropdownData = locs;
+                _address = address;
+                return locs;
             }
             catch (Exception e)
             {
-                return;
+                Console.WriteLine(e.Message);
+                MessageBox.Show("Something went wrong!");
+                return null;
             }
         }
     }
